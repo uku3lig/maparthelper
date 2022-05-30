@@ -1,5 +1,5 @@
-import pandas as pd
 import argparse
+import csv
 import math
 import sys
 
@@ -97,7 +97,11 @@ if args.lower and args.strict:
     print("--lower and --strict are mutually exclusive. Exiting.")
     sys.exit()
 
-data = pd.read_csv(args.file, usecols=['Item', 'Total'], index_col=0).squeeze('columns').to_dict()
+data = dict()
+with open(args.file, newline='') as f:
+    reader = csv.DictReader(f)
+    for row in reader:
+        data[row['Item']] = int(row['Total'])
 
 if args.dye is not None:
     data = get_dyes(data, args.dye)
