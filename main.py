@@ -11,7 +11,7 @@ QUASI_PRIMARY_DYES = ["Light Blue", "Light Gray", "Lime", "Magenta", "Orange", "
 
 
 def print_item(name: str, padding: int, count: int) -> None:
-    s = f'{name:<{padding}}  '
+    s = f'{name:<{padding}} '
 
     if args.precision == 'shulker' and (args.strict or (count < 1728 and not args.lower) or count >= 1728):
         s += f"{(n := math.ceil(count / 1728))} shulker{'s' if n > 1 else ''}"
@@ -89,6 +89,7 @@ parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], d
 parser.add_argument('--lower', '-l', help='if values are lower than the precision, display them more precisely', action='store_true')
 parser.add_argument('--strict', '-S', help='keep all values in the defined precision', action='store_true')
 parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary'], default=None)
+parser.add_argument('--storage', '-s', help='show how much storage space is needed', action='store_true')
 
 args = parser.parse_args()
 
@@ -104,3 +105,13 @@ if args.dye is not None:
 longest = len(max(data.keys(), key=len))
 for name, count in data.items():
     print_item(name, longest, count)
+
+if args.storage:
+    data = {n: math.ceil(c / 64) for n, c in data.items()}
+    stacks = sum(data.values())
+    print()
+    print(f'Total shulker boxes: {math.ceil(stacks / 27)}')
+    print(f'Total double chests: {math.ceil(stacks / 54)}')
+
+    args.precision = 'item'
+    print_item("Logs & Shulker Shells:", 0, math.ceil(stacks / 27) * 2)
