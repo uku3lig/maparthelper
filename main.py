@@ -31,7 +31,6 @@ for name, count in data.items():
         s += f"{(n := count // 1728)} shulker{'s' if n > 1 else ''} "
         count %= 1728
     
-    # to consider: count > 64, args.l, args.strict
     if args.p == 'stack' and (args.strict or (count < 64 and not args.l) or count >= 64):
         s += f"{(n := math.ceil(count / 64))} stack{'s' if n > 1 else ''}"
         count = 0
