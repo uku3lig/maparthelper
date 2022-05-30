@@ -24,14 +24,15 @@ longest = len(max(data.keys(), key=len))
 for name, count in data.items():
     s = f'{name:<{longest}}  '
 
-    if args.p == 'shulker' and (args.strict or count >= 1728):
+    if args.p == 'shulker' and (args.strict or (count < 1728 and not args.l) or count >= 1728):
         s += f"{(n := math.ceil(count / 1728))} shulker{'s' if n > 1 else ''}"
         count = 0
-    elif count >= 1728 and args.l:
+    elif count >= 1728 and not args.strict:
         s += f"{(n := count // 1728)} shulker{'s' if n > 1 else ''} "
         count %= 1728
     
-    if args.p == 'stack' or (args.p == 'shulker' and args.l and count >= 64):
+    # to consider: count > 64, args.l, args.strict
+    if args.p == 'stack' and (args.strict or (count < 64 and not args.l) or count >= 64):
         s += f"{(n := math.ceil(count / 64))} stack{'s' if n > 1 else ''}"
         count = 0
     elif count >= 64 and not args.strict:
