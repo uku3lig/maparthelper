@@ -1,0 +1,5 @@
+*.csv
+
+build/
+dist/
+*.spec
