@@ -64,7 +64,7 @@ def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
 
     if 'prim' in type:
         for n in list(dyes):
-            if n in PRIMARY_DYES:
+            if n in PRIMARY_DYES or (type == 'prim-tall' and n in TALL_FLOWERS):
                 continue
             
             if n == 'Light Gray':
@@ -81,12 +81,12 @@ def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
                 add(dyes, ['White'], c * 2)
             elif n == 'Lime':
                 add(dyes, ['Green', 'White'], c)
-            elif n == 'Magenta' and type == 'primary':
+            elif n == 'Magenta':
                 add(dyes, ['Blue', 'White'], c)
                 add(dyes, ['Red'], c * 2)
             elif n == 'Orange':
                 add(dyes, ['Red', 'Yellow'], c)
-            elif n == 'Pink' and type == 'primary':
+            elif n == 'Pink':
                 add(dyes, ['Red', 'White'], c)
 
     return dict(sorted(dyes.items(), key=lambda item: item[1], reverse=True))
@@ -101,7 +101,7 @@ parser.add_argument('file', help='path to the csv file containing the material l
 parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], default='stack', help='lowest precision of the values')
 parser.add_argument('--lower', '-l', help='if values are lower than the precision, display them more precisely', action='store_true')
 parser.add_argument('--strict', '-S', help='keep all values in the defined precision', action='store_true')
-parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'tall', 'prim-no-tall'], default=None)
+parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'tall', 'prim-tall'], default=None)
 parser.add_argument('--storage', '-s', help='show how much storage space is needed', action='store_true')
 
 args = parser.parse_args()
