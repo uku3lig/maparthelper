@@ -8,6 +8,8 @@ from typing import Dict, List
 
 PRIMARY_DYES = ["Black", "Blue", "Brown", "Green", "Red", "White", "Yellow"]
 QUASI_PRIMARY_DYES = ["Light Blue", "Light Gray", "Lime", "Magenta", "Orange", "Pink"]
+TALL_FLOWERS = ["Red", "Pink", "Magenta", "Yellow"]
+TALL_FLOWER_CRAFTABLE = ["Orange", "Purple"]
 
 
 def print_item(name: str, padding: int, count: int) -> None:
@@ -34,7 +36,18 @@ def print_item(name: str, padding: int, count: int) -> None:
 
 def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
     dyes = {n[:-11]: math.ceil(a / 8) for n, a in items.items() if "Terracotta" in n}
-    if type == 'quasi' or type == 'primary':
+
+    if type == 'tall':
+        for n in list(dyes):
+            if n not in TALL_FLOWER_CRAFTABLE:
+                continue
+            c = math.ceil(dyes.pop(n) / 2)
+            add(dyes, ['Red', 'Yellow' if n == 'Orange' else 'Blue'], c)
+
+        dyes = {n: math.ceil(a / 2) for n, a in dyes.items() if n in TALL_FLOWERS}
+
+
+    if type == 'quasi' or 'prim' in type:
         print('WARNING: You should also print the list of all dyes to know how many to craft')
         for n in list(dyes):
             if n in PRIMARY_DYES or n in QUASI_PRIMARY_DYES:
@@ -49,7 +62,7 @@ def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
             elif n == 'Purple':
                 add(dyes, ['Red', 'Blue'], c)
 
-    if type == 'primary':
+    if 'prim' in type:
         for n in list(dyes):
             if n in PRIMARY_DYES:
                 continue
@@ -68,12 +81,12 @@ def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
                 add(dyes, ['White'], c * 2)
             elif n == 'Lime':
                 add(dyes, ['Green', 'White'], c)
-            elif n == 'Magenta':
+            elif n == 'Magenta' and type == 'primary':
                 add(dyes, ['Blue', 'White'], c)
                 add(dyes, ['Red'], c * 2)
             elif n == 'Orange':
                 add(dyes, ['Red', 'Yellow'], c)
-            elif n == 'Pink':
+            elif n == 'Pink' and type == 'primary':
                 add(dyes, ['Red', 'White'], c)
 
     return dict(sorted(dyes.items(), key=lambda item: item[1], reverse=True))
@@ -88,7 +101,7 @@ parser.add_argument('file', help='path to the csv file containing the material l
 parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], default='stack', help='lowest precision of the values')
 parser.add_argument('--lower', '-l', help='if values are lower than the precision, display them more precisely', action='store_true')
 parser.add_argument('--strict', '-S', help='keep all values in the defined precision', action='store_true')
-parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary'], default=None)
+parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'tall', 'prim-no-tall'], default=None)
 parser.add_argument('--storage', '-s', help='show how much storage space is needed', action='store_true')
 
 args = parser.parse_args()
