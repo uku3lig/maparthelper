@@ -37,16 +37,6 @@ def print_item(name: str, padding: int, count: int) -> None:
 def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
     dyes = {n[:-11]: math.ceil(a / 8) for n, a in items.items() if "Terracotta" in n}
 
-    if type == 'tall':
-        for n in list(dyes):
-            if n not in TALL_FLOWER_CRAFTABLE:
-                continue
-            c = math.ceil(dyes.pop(n) / 2)
-            add(dyes, ['Red', 'Yellow' if n == 'Orange' else 'Blue'], c)
-
-        dyes = {n: math.ceil(a / 2) for n, a in dyes.items() if n in TALL_FLOWERS}
-
-
     if type == 'quasi' or 'prim' in type:
         print('WARNING: You should also print the list of all dyes to know how many to craft')
         for n in list(dyes):
@@ -101,7 +91,7 @@ parser.add_argument('file', help='path to the csv file containing the material l
 parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], default='stack', help='lowest precision of the values')
 parser.add_argument('--lower', '-l', help='if values are lower than the precision, display them more precisely', action='store_true')
 parser.add_argument('--strict', '-S', help='keep all values in the defined precision', action='store_true')
-parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'tall', 'prim-tall'], default=None)
+parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'prim-tall'], default=None)
 parser.add_argument('--storage', '-s', help='show how much storage space is needed', action='store_true')
 
 args = parser.parse_args()
