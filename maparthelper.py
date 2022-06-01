@@ -88,7 +88,7 @@ def add(d: Dict[str, int], keys: List[str], amount: int) -> None:
 
 parser = argparse.ArgumentParser()
 parser.add_argument('file', help='path to the csv file containing the material list')
-parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], default='stack', help='lowest precision of the values')
+parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], default='item', help='lowest precision of the values')
 parser.add_argument('--lower', '-l', help='if values are lower than the precision, display them more precisely', action='store_true')
 parser.add_argument('--strict', '-S', help='keep all values in the defined precision', action='store_true')
 parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'prim-tall'], default=None)
