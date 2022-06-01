@@ -1,6 +1,6 @@
 # maparthelper 
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/uku3lig/maparthelper?include_prereleases&style=for-the-badge)](https://github.com/uku3lig/maparthelper/releases/latest)
-[![wakatime](https://wakatime.com/badge/user/8c040ab4-dd86-485b-ac52-d0ca1971b711/project/e58667e9-b773-4cbd-8f1a-5a6f6d9b4df8.svg?style=for-the-badge)](https://wakatime.com/badge/user/8c040ab4-dd86-485b-ac52-d0ca1971b711/project/e58667e9-b773-4cbd-8f1a-5a6f6d9b4df8)
+[![wakatime](https://wakatime.com/badge/github/uku3lig/maparthelper.svg?style=for-the-badge)](https://wakatime.com/badge/github/uku3lig/maparthelper)
 
 **maparthelper** is a simple python tool that helps you with maparts (and schematics in general) to compute the amount of materials needed and many more things!
 
