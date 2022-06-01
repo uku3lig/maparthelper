@@ -10,6 +10,27 @@ PRIMARY_DYES = ["Black", "Blue", "Brown", "Green", "Red", "White", "Yellow"]
 QUASI_PRIMARY_DYES = ["Light Blue", "Light Gray", "Lime", "Magenta", "Orange", "Pink"]
 TALL_FLOWERS = ["Red", "Pink", "Magenta", "Yellow"]
 TALL_FLOWER_CRAFTABLE = ["Orange", "Purple"]
+FLOWERS = {
+    "Black": "Ink Sac/Wither Rose",
+    "Blue": "Lapis Lazuli/Cornflower",
+    "Brown": "Cocoa Beans",
+    "Green": "Cactus",
+    "Red": "Poppy/Red Tulip/Beetroot",
+    "White": "Bone Meal/Lily of the Valley",
+    "Yellow": "Dandelion",
+    "Light Blue": "Blue Orchid",
+    "Light Gray": "Azure Bluet/Oxeye Daisy/White Tulip",
+    "Lime": "Sea Pickle",
+    "Magenta": "Allium",
+    "Orange": "Orange Tulip",
+    "Pink": "Pink Tulip"
+}
+TALL_FLOWERS = {
+    "Poppy/Red Tulip/Beetroot": "Rose Bush",
+    "Dandelion": "Sunflower",
+    "Allium": "Lilac",
+    "Pink Tulip": "Peony"
+}
 
 
 def print_item(name: str, padding: int, count: int) -> None:
@@ -78,12 +99,18 @@ def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
                 add(dyes, ['Red', 'Yellow'], c)
             elif n == 'Pink':
                 add(dyes, ['Red', 'White'], c)
+    
+    return dyes
 
-    return dict(sorted(dyes.items(), key=lambda item: item[1], reverse=True))
 
 def add(d: Dict[str, int], keys: List[str], amount: int) -> None:
     for e in keys:
         d[e] = d.get(e, 0) + amount
+
+def replace_keys(d: Dict[str, int], keys: Dict[str, str], value_func = None) -> None:
+    for k, v in list(d.items()):
+        if k in keys.keys():
+            d[keys[k]] = d.pop(k) if value_func is None else value_func(d.pop(k))
 
 
 parser = argparse.ArgumentParser()
@@ -92,6 +119,7 @@ parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], d
 parser.add_argument('--lower', '-l', help='if values are lower than the precision, display them more precisely', action='store_true')
 parser.add_argument('--strict', '-S', help='keep all values in the defined precision', action='store_true')
 parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'prim-tall'], default=None)
+parser.add_argument('--flower', '-f', help='when used with -d, shows the amount of materials needed to craft the dyes', action='store_true')
 parser.add_argument('--storage', '-s', help='show how much storage space is needed', action='store_true')
 
 args = parser.parse_args()
@@ -108,6 +136,14 @@ with open(args.file, newline='') as f:
 
 if args.dye is not None:
     data = get_dyes(data, args.dye)
+
+    if args.flower:
+        replace_keys(data, FLOWERS)
+        if 'tall' in args.dye:
+            replace_keys(data, TALL_FLOWERS, lambda x: math.ceil(x/2))
+
+    data = dict(sorted(data.items(), key=lambda item: item[1], reverse=True))
+
 
 longest = len(max(data.keys(), key=len))
 for name, count in data.items():
