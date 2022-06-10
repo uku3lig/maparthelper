@@ -2,7 +2,7 @@
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/uku3lig/maparthelper?include_prereleases&style=for-the-badge)](https://github.com/uku3lig/maparthelper/releases/latest)
 [![wakatime](https://wakatime.com/badge/github/uku3lig/maparthelper.svg?style=for-the-badge)](https://wakatime.com/badge/github/uku3lig/maparthelper)
 
-**maparthelper** is a simple python tool that helps you with maparts (and schematics in general) to compute the amount of materials needed and many more things!
+**maparthelper** is a simple python tool that helps you with maparts (and schematics in general) to compute the amount of items needed and many more things!
 
 ### How to use 
 
@@ -12,12 +12,12 @@ Grab the [latest release](https://github.com/uku3lig/maparthelper/releases/lates
 
 Parameter | Short | Choices | Explanation
 ---|---|---|---
-`--precision` | `-p` | `shulker`, `stack`, `item` | Sets the minimum unit to display the materials.
-`--lower` | `-l` | None | If some material has less than the minimum unit, display the amount more precisely.
+`--precision` | `-p` | `shulker`, `stack`, `item` | Sets the minimum unit to display the item amounts.
+`--lower` | `-l` | None | If some item has less than the minimum unit, display the amount more precisely.
 `--strict` | `-S` | None | Keep all the values in the defined precision with `-p`, no lower, no higher.
 `--dye` | `-d` | `all`, `quasi`, `primary`, `prim-tall` | Calculates the amount of dye needed to dye terracotta. See [this section](#dye-options).
-`--flower` | `-f` | None | When used with `-d`, shows the materials needed to craft all the dyes.
-`--storage` | `-s` | None | Show the amount of storage space needed to store all the materials.
+`--flower` | `-f` | None | When used with `-d`, shows the items needed to craft all the dyes.
+`--storage` | `-s` | None | Show the amount of storage space needed to store all the items.
 `--done` | `-D` | comma-separated list of items | Marks the specified items as done, hiding them from the material list.
 `--show-done` | None | None | Shows the items marked as done.
 
