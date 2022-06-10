@@ -18,6 +18,8 @@ Parameter | Short | Choices | Explanation
 `--dye` | `-d` | `all`, `quasi`, `primary`, `prim-tall` | Calculates the amount of dye needed to dye terracotta. See [this section](#dye-options).
 `--flower` | `-f` | None | When used with `-d`, shows the materials needed to craft all the dyes.
 `--storage` | `-s` | None | Show the amount of storage space needed to store all the materials.
+`--done` | `-D` | comma-separated list of items | Marks the specified items as done, hiding them from the material list.
+`--show-done` | None | None | Shows the items marked as done.
 
 #### `--dye` options
 

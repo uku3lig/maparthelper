@@ -112,6 +112,44 @@ def replace_keys(d: Dict[str, int], keys: Dict[str, str], value_func = None) -> 
         if k in keys.keys():
             d[keys[k]] = d.pop(k) if value_func is None else value_func(d.pop(k))
 
+def convert_file(path: str) -> None:
+    with open(path, 'r', newline='') as r:
+        reader = csv.reader(r)
+
+        header = next(reader) + ['Done']
+        rows = [header]
+
+        for row in reader:
+            rows.append(row + ['N'])
+        
+    with open(path, 'w', newline='') as w:
+        writer = csv.writer(w)
+        writer.writerows(rows)
+
+
+def mark_as_done(path: str, key: str) -> None:
+    with open(path, 'r', newline='') as r:
+        reader = csv.reader(r)
+
+        rows = [next(reader)]
+        for row in reader:
+            if key in row:
+                row[-1] = 'Y'
+            rows.append(row)
+
+    with open(path, 'w', newline='') as w:
+        writer = csv.writer(w)
+        writer.writerows(rows)
+
+
+def needs_conversion(path: str) -> bool:
+    with open(path, 'r', newline='') as r:
+        reader = csv.reader(r)
+        return 'Done' not in next(reader)
+
+
+# TODO concrete block amounts (sand and gravel + dyes)
+# TODO sandstone?
 
 parser = argparse.ArgumentParser()
 parser.add_argument('file', help='path to the csv file containing the material list')
@@ -121,6 +159,8 @@ parser.add_argument('--strict', '-S', help='keep all values in the defined preci
 parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'prim-tall'], default=None)
 parser.add_argument('--flower', '-f', help='when used with -d, shows the amount of materials needed to craft the dyes', action='store_true')
 parser.add_argument('--storage', '-s', help='show how much storage space is needed', action='store_true')
+parser.add_argument('--done', '-D', help='mark a material as done, hiding it from the list', action='store', nargs='+', metavar='name')
+parser.add_argument('--show-done', help='shows done materials with their respective amounts', action='store_true')
 
 args = parser.parse_args()
 
@@ -128,11 +168,35 @@ if args.lower and args.strict:
     print("--lower and --strict are mutually exclusive. Exiting.")
     sys.exit()
 
-data = dict()
-with open(args.file, newline='') as f:
+if args.done is not None and needs_conversion(args.file):
+    convert_file(args.file)
+
+
+data, done = dict(), dict()
+with open(args.file, 'r', newline='') as f:
     reader = csv.DictReader(f)
     for row in reader:
-        data[row['Item']] = int(row['Total'])
+        if 'Done' in row and row['Done'] == 'Y':
+            done[row['Item']] = int(row['Total'])
+        else:
+            data[row['Item']] = int(row['Total'])
+
+    if args.done is not None and len(args.done) != 0:
+        items = [s.strip() for s in " ".join(args.done).split(",")]
+        for item in items:
+            t = [k for k in data if item.casefold() == k.casefold()]
+            if len(t) != 1:
+                print(f'WARNING: could not find {item} in the csv file')
+            else:
+                t = t[0]
+                mark_as_done(args.file, t)
+                if t in data:
+                    done[t] = data[t]
+                    del data[t]
+    
+        done = dict(sorted(done.items(), key=lambda item: item[1], reverse=True))
+
+
 
 if args.dye is not None:
     data = get_dyes(data, args.dye)
@@ -148,6 +212,11 @@ if args.dye is not None:
 longest = len(max(data.keys(), key=len))
 for name, count in data.items():
     print_item(name, longest, count)
+
+if args.show_done:
+    print('\nDone:')
+    for name, count in done.items():
+        print_item(name, longest, count)
 
 if args.storage:
     data = {n: math.ceil(c / 64) for n, c in data.items()}
