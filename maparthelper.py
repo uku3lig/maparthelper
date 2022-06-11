@@ -160,7 +160,7 @@ parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choi
 parser.add_argument('--flower', '-f', help='when used with -d, shows the amount of items needed to craft the dyes', action='store_true')
 parser.add_argument('--storage', '-s', help='show how much storage space is needed', action='store_true')
 parser.add_argument('--done', '-D', help='mark a item as done, hiding it from the list', action='store', nargs='+', metavar='name')
-parser.add_argument('--show-done', help='shows done items with their respective amounts', action='store_true')
+parser.add_argument('--show-done', help='show done items with their respective amounts', action='store_true')
 
 args = parser.parse_args()
 
