@@ -1,0 +1,28 @@
+name: Build
+
+on:
+  push
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      
+      - name: Install pyinstaller
+        run: pip install pyinstaller
+      
+      - name: Build executable
+        run: pyinstaller -Fw maparthelper.py
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: maparthelper-artifacts-linux
+          path: dist/*
