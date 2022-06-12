@@ -3,8 +3,6 @@ import csv
 import math
 import sys
 
-from typing import Dict, List
-
 
 PRIMARY_DYES = ["Black", "Blue", "Brown", "Green", "Red", "White", "Yellow"]
 QUASI_PRIMARY_DYES = ["Light Blue", "Light Gray", "Lime", "Magenta", "Orange", "Pink"]
@@ -55,7 +53,8 @@ def print_item(name: str, padding: int, count: int) -> None:
 
     print(s)
 
-def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
+def get_dyes(items: dict, type: str) -> dict:
+    # FIXME this is problematic, this function needs to be more universal
     dyes = {n[:-11]: math.ceil(a / 8) for n, a in items.items() if "Terracotta" in n}
 
     if type == 'quasi' or 'prim' in type:
@@ -103,11 +102,11 @@ def get_dyes(items: Dict[str, int], type: str) -> Dict[str, int]:
     return dyes
 
 
-def add(d: Dict[str, int], keys: List[str], amount: int) -> None:
+def add(d: dict, keys: list, amount: int) -> None:
     for e in keys:
         d[e] = d.get(e, 0) + amount
 
-def replace_keys(d: Dict[str, int], keys: Dict[str, str], value_func = None) -> None:
+def replace_keys(d: dict, keys: dict, value_func = None) -> None:
     for k, v in list(d.items()):
         if k in keys.keys():
             d[keys[k]] = d.pop(k) if value_func is None else value_func(d.pop(k))
