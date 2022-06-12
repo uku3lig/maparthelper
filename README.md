@@ -1,4 +1,5 @@
 # maparthelper 
+![GitHub all releases](https://img.shields.io/github/downloads/uku3lig/maparthelper/total?style=for-the-badge)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/uku3lig/maparthelper?include_prereleases&style=for-the-badge)](https://github.com/uku3lig/maparthelper/releases/latest)
 [![wakatime](https://wakatime.com/badge/github/uku3lig/maparthelper.svg?style=for-the-badge)](https://wakatime.com/badge/github/uku3lig/maparthelper)
 
