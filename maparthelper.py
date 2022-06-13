@@ -6,8 +6,16 @@ import sys
 
 PRIMARY_DYES = ["Black", "Blue", "Brown", "Green", "Red", "White", "Yellow"]
 QUASI_PRIMARY_DYES = ["Light Blue", "Light Gray", "Lime", "Magenta", "Orange", "Pink"]
-TALL_FLOWERS = ["Red", "Pink", "Magenta", "Yellow"]
+SECONDARY_DYES = ["Cyan", "Gray", "Purple"]
+DYES = PRIMARY_DYES + QUASI_PRIMARY_DYES + SECONDARY_DYES
+
+# concrete is not here since we need to add powder and solid together
+# see get_dyes
+ONE_FOR_EIGHT = ["Terracotta", "Stained Glass", "Stained Glass Pane"]
+
+TALL_FLOWER_DYES = ["Red", "Pink", "Magenta", "Yellow"]
 TALL_FLOWER_CRAFTABLE = ["Orange", "Purple"]
+
 FLOWERS = {
     "Black": "Ink Sac/Wither Rose",
     "Blue": "Lapis Lazuli/Cornflower",
@@ -54,8 +62,22 @@ def print_item(name: str, padding: int, count: int) -> None:
     print(s)
 
 def get_dyes(items: dict, type: str) -> dict:
-    # FIXME this is problematic, this function needs to be more universal
-    dyes = {n[:-11]: math.ceil(a / 8) for n, a in items.items() if "Terracotta" in n}
+    # FIXME add conc and conc powder together
+    dyes = {dye: 0 for dye in DYES}
+
+    for item, amount in items.items():
+        dye = [d for d in DYES if item.startswith(d) and 'Carpet' not in item]
+        if len(dye) != 1:
+            continue
+
+        if any([item.endswith(e) for e in ONE_FOR_EIGHT]):
+            amount = math.ceil(amount / 8)
+        elif 'Concrete' in item:
+            amount = amount / 8
+
+        dyes[dye[0]] += amount
+    
+    dyes = {dye: math.ceil(amount) for dye, amount in dyes.items() if amount != 0}
 
     if type == 'quasi' or 'prim' in type:
         print('WARNING: You should also print the list of all dyes to know how many to craft')
