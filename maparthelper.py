@@ -169,9 +169,6 @@ def needs_conversion(path: str) -> bool:
         return 'Done' not in next(reader)
 
 
-# TODO concrete block amounts (sand and gravel + dyes)
-# TODO sandstone?
-
 parser = argparse.ArgumentParser()
 parser.add_argument('file', help='path to the csv file containing the material list')
 parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], default='item', help='lowest precision of the values')
