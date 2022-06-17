@@ -174,6 +174,8 @@ parser.add_argument('file', help='path to the csv file containing the material l
 parser.add_argument('--precision', '-p', choices=['shulker', 'stack', 'item'], default='item', help='lowest precision of the values')
 parser.add_argument('--lower', '-l', help='if values are lower than the precision, display them more precisely', action='store_true')
 parser.add_argument('--strict', '-S', help='keep all values in the defined precision', action='store_true')
+parser.add_argument('--terracotta', '-t', help='show the amount of terracotta needed', action='store_true')
+parser.add_argument('--concrete', '-c', help='show the amount of sand and gravel needed for concrete', action='store_true')
 parser.add_argument('--dye', '-d', help='compute the amount of dye needed', choices=['all', 'quasi', 'primary', 'prim-tall'], default=None)
 parser.add_argument('--flower', '-f', help='when used with -d, shows the amount of items needed to craft the dyes', action='store_true')
 parser.add_argument('--storage', '-s', help='show how much storage space is needed', action='store_true')
@@ -184,6 +186,10 @@ args = parser.parse_args()
 
 if args.lower and args.strict:
     print("--lower and --strict are mutually exclusive. Exiting.")
+    sys.exit()
+
+if args.terracotta and args.concrete:
+    print('--terracotta and --concrete are mutually exclusive. Exiting.')
     sys.exit()
 
 if args.done is not None and needs_conversion(args.file):
@@ -214,7 +220,17 @@ with open(args.file, 'r', newline='') as f:
     
         done = dict(sorted(done.items(), key=lambda item: item[1], reverse=True))
 
+if args.terracotta:
+    data = {n: c for n, c in data.items() if 'Terracotta' in n}
+    print_item('Total Terracotta (to be dyed)', 0, sum([math.ceil(n / 8) * 8 for n in data.values()]))
 
+if args.concrete:
+    data = {n: c for n, c in data.items() if 'Concrete' in n}
+    for name in [e for e in data if 'Powder' in e]:
+        short = name[:-7]
+        data[short] = data[name] if short not in data else data[short] + data[name]
+        del data[name]
+    print_item('Sand & Gravel', 0, sum([math.ceil(n / 8) * 4 for n in data.values()]))
 
 if args.dye is not None:
     data = get_dyes(data, args.dye)
